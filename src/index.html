@@ -3,11 +3,47 @@
 <head>
   <meta charset="UTF-8">
   <title>Проєкт: Timeout, Interval та Fetch</title>
-  <link rel="stylesheet" href="./css/styles.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      margin: 0;
+      background-color: #f9f9f9;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    section {
+      margin-bottom: 20px;
+    }
+    button {
+      padding: 8px 12px;
+      margin-right: 10px;
+      cursor: pointer;
+      border: none;
+      background-color: #007bff;
+      color: #fff;
+      border-radius: 4px;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    hr {
+      margin: 20px 0;
+      border: 0;
+      border-top: 1px solid #ddd;
+    }
+    pre {
+      background: #eee;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+  </style>
 </head>
 <body>
   <h1>Проєкт: Завдання Timeout, Interval та Fetch</h1>
-
+  
   <!-- Завдання Timeout -->
   <section id="timeout-section">
     <h2>Завдання Timeout</h2>
@@ -34,6 +70,66 @@
     <pre id="fetchResult"></pre>
   </section>
 
-  <script src="./js/script.js"></script>
+  <script>
+    // ----- Завдання Timeout -----
+    let timeoutId;
+    const startTimeoutBtn = document.getElementById('startTimeout');
+    const cancelTimeoutBtn = document.getElementById('cancelTimeout');
+    const timeoutMessage = document.getElementById('timeoutMessage');
+
+    startTimeoutBtn.addEventListener('click', () => {
+      timeoutMessage.textContent = "Таймер запущено, чекаємо 5 секунд...";
+      timeoutId = setTimeout(() => {
+        timeoutMessage.textContent = "Час вийшов!";
+        console.log("Час вийшов!");
+      }, 5000);
+    });
+
+    cancelTimeoutBtn.addEventListener('click', () => {
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+        timeoutMessage.textContent = "Таймер скасовано.";
+        console.log("Таймер скасовано.");
+        timeoutId = null;
+      }
+    });
+
+    // ----- Завдання Interval -----
+    let counterValue = 0;
+    const counterSpan = document.getElementById('counter');
+    const stopCounterBtn = document.getElementById('stopCounter');
+
+    const intervalId = setInterval(() => {
+      counterValue++;
+      counterSpan.textContent = counterValue;
+    }, 1000);
+
+    stopCounterBtn.addEventListener('click', () => {
+      clearInterval(intervalId);
+      console.log("Лічильник зупинено.");
+    });
+
+    // ----- Завдання Fetch -----
+    const fetchDataBtn = document.getElementById('fetchData');
+    const fetchResult = document.getElementById('fetchResult');
+
+    fetchDataBtn.addEventListener('click', () => {
+      fetch('https://jsonplaceholder.typicode.com/todos/1')
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(data => {
+          console.log("Отримані дані:", data);
+          fetchResult.textContent = JSON.stringify(data, null, 2);
+        })
+        .catch(error => {
+          console.error("Сталася помилка при отриманні даних:", error);
+          fetchResult.textContent = "Помилка отримання даних.";
+        });
+    });
+  </script>
 </body>
 </html>
